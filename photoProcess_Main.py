@@ -3,7 +3,8 @@ import time
 import os
 import cv2
 from getJson import loadJson
-from calculateAngle import angle
+from calculateAngle import calcAngle
+angleList = ['torso_Rthigh',1,8,9]
 PGDOWN = 2228224
 SPACEBAR = 32
 ESC = 27
@@ -13,14 +14,7 @@ def cv2Hitkey(k, waitTime):  # keyboard control
     if (t == k):
         return True
     return False
-"""
-def cv2Hitkey(k1,k2, waitTime): # keyboard control
-    t = cv2.waitKey(waitTime) & 0xFF
-    if t == k1 | t == k2:
-        return True
 
-    return False
-"""
 def init():
     print("Input Mode.\n Mode 1: Press 'SPACEBAR' to take screenshot \n Mode 2: Take screenshots automatically\n ESC to end program.\nPress any other key to quit.\n")
     mode = int(input())
@@ -29,7 +23,7 @@ def init():
         sys.exit()
     return(mode)
 # call OpenPosedemo.exe
-comm = ".\\bin\\OpenPosedemo.exe --render_pose 1 --display 0 --net_resolution 320x176 --image_dir tempImg/  --write_images genImg --write_json genJson --logging_level 255"
+comm = ".\\bin\\OpenPosedemo.exe --render_pose 1 --display 0 --net_resolution 320x176 --image_dir tempImg/  --write_images genImg --write_json genJson --logging_level 3"
 #---------------------------------------
 mode = init()
 cap = cv2.VideoCapture(0)
@@ -50,7 +44,7 @@ while(1):
         os.system(comm)                                             # pass shot picture to OpenPose                                                              # ... process the image / json
         arr = loadJson("genJson/test" + str(totFrame) + "_keypoints.json")
         #print(arr)
-        angle1 = angle(arr, 11, 12, 13)
+        angle1 = calcAngle(arr, 11, 12, 13)
         print(angle1)
        #  for p in badPostions:
            # print(hint[p])
