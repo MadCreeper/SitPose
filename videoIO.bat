@@ -1,0 +1,1 @@
+bin\OpenPoseDemo.exe --video testVideo\JLJT.mp4 --write_video genVideo\test.mp4

@@ -1,0 +1,1 @@
+.\bin\OpenPosedemo.exe --render_pose 1 --net_resolution 320x176 --image_dir tempImg/  --write_images genImg --write_json genJson
