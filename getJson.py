@@ -1,16 +1,20 @@
 import json
 import os
 import sys
+
 import numpy as np
 
+
 def loadJson(jsonDir):
-    np.set_printoptions(precision=3, suppress=1) # keep 3 digits of float (print)
+    # keep 3 digits of float (print)
+    np.set_printoptions(precision=3, suppress=1)
     poseJson = open(jsonDir)
     poseData = json.load(poseJson)
 
-    Arr = poseData['people'][0]["pose_keypoints_2d"] # get first person's data in json
+    # get first person's data in json
+    Arr = poseData['people'][0]["pose_keypoints_2d"]
     poseArr = np.array(Arr)
-    poseArr = poseArr.reshape(18,-1)
+    poseArr = poseArr.reshape(25, -1)
     return (poseArr)
-    
-#print(loadJson('EXAMPLE.json'))
+
+# print(loadJson('EXAMPLE.json'))

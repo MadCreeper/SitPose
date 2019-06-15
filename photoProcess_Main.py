@@ -1,12 +1,17 @@
+import os
 import sys
 import time
-import os
-import cv2
-from getJson import loadJson
-from calculateAngle import calcAngle
-angleList = [['body_rLeg', 1, 8, 9, 85, 110],
-             ['body_lLeg', 1, 11, 12, 85, 110]]
 
+import cv2
+
+from calculateAngle import calcAngle
+from getJson import loadJson
+
+angleList = [['body_rLeg', 1, 8, 10, 85, 110],
+             ['body_lLeg', 1, 8, 13, 85, 110],
+             ]
+
+# [p1,p2,p3,angleMin,angleMax] p1,p2,p3 refers to the joint map (25 now)
 PGDOWN = 2228224
 SPACEBAR = 32
 ESC = 27
@@ -31,12 +36,14 @@ def init():
 
 def checkForAngle(arr):
     for a in angleList:
-        curAngle = calcAngle(arr,a[1], a[2], a[3])
-        print(a,curAngle)
+        curAngle = calcAngle(arr, a[1], a[2], a[3])
+        print(a, curAngle)
+        print("In Range" if a[4] <=
+              curAngle and curAngle <= a[5] else "Out of Range")
 
 
 # call OpenPosedemo.exe
-comm = ".\\bin\\OpenPosedemo.exe --render_pose 1 --display 0 --net_resolution 320x176 --image_dir tempImg/  --write_images genImg --write_json genJson --logging_level 3"
+comm = ".\\bin\\OpenPosedemo.exe --render_pose 2 --display 1 --net_resolution 320x176 --image_dir tempImg/  --write_images genImg --write_json genJson --logging_level 3"
 # ---------------------------------------
 mode = init()
 cap = cv2.VideoCapture(0)
@@ -66,7 +73,7 @@ while(1):
         # ... process the image / json
         # remove the image
         os.remove(imgName)
-
+        print("One Round Done")
     if mode == 1 and cv2Hitkey(ESC, 1):
         break
 
