@@ -5,11 +5,23 @@ import time
 import cv2
 
 from calculateAngle import calcAngle
+from calculateAngle import calcIncline
 from getJson import loadJson
 
-angleList = [['body_rLeg', 1, 8, 10, 85, 110],
-             ['body_lLeg', 1, 8, 13, 85, 110],
+angleList = [['body_rLeg', 1, 9, 10, 85, 110],
+             ['body_lLeg', 1, 9, 13, 85, 110],
+             [' rKnee',	9, 10, 11, 85, 100],
+             ['lKnee', 12, 13, 14, 85, 100],
+             ['rAnkle',	2, 3, 4, 90, 120],
+             ['lAnkle',	5, 6, 7, 90, 120]
              ]
+inclineList = [['Body', 1, 8, 85, 120],
+               ['rLeg'	, 10, 11, 80, 100],
+               ['lLeg'	, 13, 14, 80, 100],
+               ['rArm'	, 2, 3, 80,	110],
+               ['lArm'	, 5, 6,	80,	110],
+               ['neck'	, 17, 1, 85, 95]]
+
 
 # [p1,p2,p3,angleMin,angleMax] p1,p2,p3 refers to the joint map (25 now)
 PGDOWN = 2228224
@@ -36,10 +48,32 @@ def init():
 
 def checkForAngle(arr):
     for a in angleList:
+        # name , p1,p2,p3, minAngle,maxAngle,curAngle
         curAngle = calcAngle(arr, a[1], a[2], a[3])
-        print(a, curAngle)
-        print("In Range" if a[4] <=
-              curAngle and curAngle <= a[5] else "Out of Range")
+        print("%s keypoints = %d,%d,%d MinAngle = %d MaxAngle = %d CurAngle = %f" % (
+            a[0], a[1], a[2], a[3], a[4], a[5], round(curAngle, 2)))
+
+        if curAngle > a[5]:
+            print("Too Big")
+        if curAngle < a[4]:
+            print("Too Small")
+        if a[4] <= curAngle and curAngle <= a[5]:
+            print("In Range")
+
+
+def checkForIncline(arr):
+    for a in inclineList:
+        # name , p1,p2, minAngle,maxAngle,curAngle
+        curAngle = calcIncline(arr, a[1], a[2])
+        print("%s keypoints = %d,%d MinAngle = %d MaxAngle = %d CurAngle = %f" % (
+            a[0], a[1], a[2], a[3], a[4], round(curAngle, 2)))
+
+        if curAngle > a[4]:
+            print("Too Big")
+        if curAngle < a[3]:
+            print("Too Small")
+        if a[3] <= curAngle and curAngle <= a[4]:
+            print("In Range")
 
 
 # call OpenPosedemo.exe
@@ -55,25 +89,29 @@ while(1):
     # show a frame
     cv2.imshow("capture", frame)
     # the directory of the temp image
-    imgName = "tempImg/" + "test" + str(totFrame) + ".jpg"
 
+    # imgName = 'temp1'
+    imgName = str(totFrame)
+    imgNameFull = "tempImg/" + imgName + ".jpg"
     # this is to reduce LAG in auto mode, while avoid lag in manual mode
     if mode == 2 and cv2Hitkey(ESC, 1):
         break
 
     if ((mode == 2) | cv2Hitkey(PGDOWN, 1)):  # press pagedown to capture a photo
 
-        cv2.imwrite(imgName, frame)
+        cv2.imwrite(imgNameFull, frame)  # ***
         # pass shot picture to OpenPose                                                              # ... process the image / json
         os.system(comm)
-        arr = loadJson("genJson/test" + str(totFrame) + "_keypoints.json")
-        # print(arr)
+        arr = loadJson("genJson/" + imgName + "_keypoints.json")
 
+        print("ANGLE:")
         checkForAngle(arr)
-        # ... process the image / json
-        # remove the image
-        os.remove(imgName)
-        print("One Round Done")
+        print("INCLINE ANGLE:")
+        checkForIncline(arr)
+
+        # remove the image  # FOR TEST REMOVE THIS LINE ***
+        os.remove(imgNameFull)
+        print("One Round Done!\n")
     if mode == 1 and cv2Hitkey(ESC, 1):
         break
 
