@@ -8,12 +8,12 @@ from calculateAngle import calcAngle
 from calculateAngle import calcIncline
 from getJson import loadJson
 
-angleList = [['body_rLeg', 1, 9, 10, 85, 110],
-             ['body_lLeg', 1, 9, 13, 85, 110],
-             [' rKnee',	9, 10, 11, 85, 100],
-             ['lKnee', 12, 13, 14, 85, 100],
-             ['rAnkle',	2, 3, 4, 90, 120],
-             ['lAnkle',	5, 6, 7, 90, 120]
+angleList = [['body_rightLeg', 1, 9, 10, 80, 110],
+             ['body_leftLeg', 1, 9, 13, 80, 110],
+             [' rightKnee',	9, 10, 11, 80, 100],
+             ['leftKnee', 12, 13, 14, 80, 100],
+             ['rightElbow',	2, 3, 4, 90, 160],
+             ['leftElbow',	5, 6, 7, 90, 160]
              ]
 inclineList = [['Body', 1, 8, 85, 120],
                ['rLeg'	, 10, 11, 80, 100],
@@ -77,7 +77,7 @@ def checkForIncline(arr):
 
 
 # call OpenPosedemo.exe
-comm = ".\\bin\\OpenPosedemo.exe --render_pose 2 --display 1 --net_resolution 320x176 --image_dir tempImg/  --write_images genImg --write_json genJson --logging_level 3"
+comm = ".\\bin\\OpenPosedemo.exe --render_pose 2 --net_resolution 320x176 --image_dir tempImg/  --write_images genImg --write_json genJson --logging_level 3"
 # ---------------------------------------
 mode = init()
 cap = cv2.VideoCapture(0)
@@ -90,9 +90,10 @@ while(1):
     cv2.imshow("capture", frame)
     # the directory of the temp image
 
-    # imgName = 'temp1'
     imgName = str(totFrame)
+    # imgName = 'temp1'  # ***
     imgNameFull = "tempImg/" + imgName + ".jpg"
+
     # this is to reduce LAG in auto mode, while avoid lag in manual mode
     if mode == 2 and cv2Hitkey(ESC, 1):
         break
