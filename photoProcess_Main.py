@@ -8,7 +8,7 @@ from calculateAngle import calcAngle
 from calculateAngle import calcIncline
 from getJson import loadJson
 
-angleList = [['body_rightLeg', 1, 9, 10, 80, 110],
+angleList = [['body_rightLeg身体_右腿', 1, 9, 10, 80, 110],
              ['body_leftLeg', 1, 9, 13, 80, 110],
              [' rightKnee',	9, 10, 11, 80, 100],
              ['leftKnee', 12, 13, 14, 80, 100],
@@ -16,11 +16,11 @@ angleList = [['body_rightLeg', 1, 9, 10, 80, 110],
              ['leftElbow',	5, 6, 7, 90, 160]
              ]
 inclineList = [['Body', 1, 8, 85, 120],
-               ['rLeg'	, 10, 11, 80, 100],
-               ['lLeg'	, 13, 14, 80, 100],
-               ['rArm'	, 2, 3, 80,	110],
-               ['lArm'	, 5, 6,	80,	110],
-               ['neck'	, 17, 1, 85, 95]]
+               ['rightLeg'	, 10, 11, 80, 100],
+               ['leftLeg'	, 13, 14, 80, 100],
+               ['rightArm'	, 2, 3, 80,	110],
+               ['leftArm'	, 5, 6,	80,	110],
+               ['neck_body'	, 17, 1, 60, 80]]
 
 
 # [p1,p2,p3,angleMin,angleMax] p1,p2,p3 refers to the joint map (25 now)
@@ -54,11 +54,11 @@ def checkForAngle(arr):
             a[0], a[1], a[2], a[3], a[4], a[5], round(curAngle, 2)))
 
         if curAngle > a[5]:
-            print("Too Big")
+            print("Too Big角度过大")
         if curAngle < a[4]:
-            print("Too Small")
+            print("Too Small角度过小")
         if a[4] <= curAngle and curAngle <= a[5]:
-            print("In Range")
+            print("In Range角度正确")
 
 
 def checkForIncline(arr):
@@ -69,11 +69,11 @@ def checkForIncline(arr):
             a[0], a[1], a[2], a[3], a[4], round(curAngle, 2)))
 
         if curAngle > a[4]:
-            print("Too Big")
+            print("Too Big角度过大")
         if curAngle < a[3]:
-            print("Too Small")
+            print("Too Small角度过小")
         if a[3] <= curAngle and curAngle <= a[4]:
-            print("In Range")
+            print("In Range角度正确")
 
 
 # call OpenPosedemo.exe
@@ -91,7 +91,10 @@ while(1):
     # the directory of the temp image
 
     imgName = str(totFrame)
-    # imgName = 'temp1'  # ***
+
+    #  ADD THIS LINE TO FIX INPUT IMAGE
+    #imgName = 'temp1'  # *** 
+
     imgNameFull = "tempImg/" + imgName + ".jpg"
 
     # this is to reduce LAG in auto mode, while avoid lag in manual mode
@@ -111,7 +114,7 @@ while(1):
         checkForIncline(arr)
 
         # remove the image  # FOR TEST REMOVE THIS LINE ***
-        os.remove(imgNameFull)
+        #os.remove(imgNameFull)
         print("One Round Done!\n")
     if mode == 1 and cv2Hitkey(ESC, 1):
         break
